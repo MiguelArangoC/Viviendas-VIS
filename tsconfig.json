@@ -20,6 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "backend/backend_energia_vis.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
