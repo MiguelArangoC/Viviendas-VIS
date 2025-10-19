@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Battery, Zap, TrendingDown, Award, Users, Settings, CreditCard, BarChart3, Lightbulb, Home, User, LogOut } from 'lucide-react';
 
 // Simulación de datos iniciales
