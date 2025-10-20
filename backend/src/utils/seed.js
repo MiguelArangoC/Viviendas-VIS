@@ -6,14 +6,21 @@ const { MONGO_URI } = require('../config/environment');
 
 async function seed() {
   try {
-    await mongoose.connect(MONGO_URI);
-    console.log('Conectado a MongoDB');
+    console.log('🔄 Conectando a MongoDB Atlas...');
+    await mongoose.connect(MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 10000,
+    });
+    console.log('✅ Conectado a MongoDB Atlas');
 
     // Limpiar datos existentes
+    console.log('🧹 Limpiando datos existentes...');
     await User.deleteMany({});
     await Tariff.deleteMany({});
 
     // Crear tarifas
+    console.log('💰 Creando tarifas...');
     const tariffs = await Tariff.insertMany([
       {
         name: 'Básico',
@@ -43,10 +50,12 @@ async function seed() {
         features: ['350 kWh incluidos', 'Soporte 24/7', 'Asesoría']
       }
     ]);
+    console.log(`✅ ${tariffs.length} tarifas creadas`);
 
     // Crear usuarios demo
+    console.log('👥 Creando usuarios demo...');
     const hashedPassword = await bcrypt.hash('demo123', 10);
-    await User.insertMany([
+    const users = await User.insertMany([
       {
         name: 'Usuario Demo',
         email: 'demo@energiavis.com',
@@ -62,17 +71,34 @@ async function seed() {
         email: 'admin@energiavis.com',
         password: await bcrypt.hash('admin123', 10),
         role: 'admin',
+        balance: 0,
+        consumption: 0,
+        rewards: 0,
         meterId: 'MET' + (Date.now() + 1)
       }
     ]);
+    console.log(`✅ ${users.length} usuarios creados`);
 
-    console.log('✅ Datos de prueba creados');
-    console.log('📧 Usuario: demo@energiavis.com / demo123');
-    console.log('👨‍💼 Admin: admin@energiavis.com / admin123');
+    console.log('\n' + '='.repeat(50));
+    console.log('✨ Base de datos inicializada correctamente');
+    console.log('='.repeat(50));
+    console.log('\n📧 Credenciales de prueba:');
+    console.log('   Usuario: demo@energiavis.com / demo123');
+    console.log('   Admin:   admin@energiavis.com / admin123');
+    console.log('\n💾 Base de datos:', mongoose.connection.name);
+    console.log('🌐 Host:', mongoose.connection.host);
+    console.log('='.repeat(50) + '\n');
     
+    await mongoose.connection.close();
+    console.log('👋 Desconectado de MongoDB');
     process.exit(0);
   } catch (error) {
-    console.error('Error:', error);
+    console.error('\n❌ Error:', error.message);
+    console.error('\n💡 Consejos:');
+    console.error('   1. Verifica que MONGO_URI esté correctamente configurado en .env');
+    console.error('   2. Asegúrate de que tu IP esté en la lista blanca de MongoDB Atlas');
+    console.error('   3. Verifica que las credenciales sean correctas');
+    console.error('   4. Comprueba tu conexión a Internet\n');
     process.exit(1);
   }
 }

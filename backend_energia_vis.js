@@ -15,7 +15,7 @@ app.use(express.json());
 
 // Configuración
 const PORT = process.env.PORT || 5000;
-const JWT_SECRET = process.env.JWT_SECRET || 'M8v$eX9#p2@r!LqZ7uFw^JgB0Tc&nKmY';
+const JWT_SECRET = process.env.JWT_SECRET || 'M8v$eX9ap2@r!LqZ7uFw^JgB0Tc&nKmY';
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/energia_vis';
 
 // ============================================
